@@ -1,6 +1,7 @@
-import React, { ChangeEvent } from "react";
+import React, { ChangeEvent, createContext } from "react";
 import { Switch, Route, Link } from "react-router-dom";
 import { testApi } from "../../api/demo";
+import DemoComponent from "./components/DemoComponent";
 import { State } from "./index.interface";
 import ChildThree from "./ChildThree";
 import ChildOne from "./ChildOne";
@@ -8,9 +9,9 @@ import ChildTwo from "./ChildTwo";
 
 import styles from "./index.module.less";
 
-// const CounterContext = createContext({
-//   counter: 0,
-// });
+const CounterContext = createContext({
+  counter: 0,
+});
 
 class Demo extends React.Component<PageProps, State> {
   constructor(props: PageProps) {
@@ -45,9 +46,15 @@ class Demo extends React.Component<PageProps, State> {
 
   handleLogin = async () => {
     const res = await testApi(); // 用 yield 代替 await
-    this.setState({
-      userInfo: res.data,
-    });
+    if (res.code === "OK") {
+      this.setState({
+        userInfo: {
+          address: res.data.address,
+          gender: res.data.gender,
+          nickName: res.data.nickName,
+        },
+      });
+    }
   };
 
   render() {
@@ -57,6 +64,9 @@ class Demo extends React.Component<PageProps, State> {
       <>
         <div className={styles.nameButton}>点我登录</div>
         {userInfo.nickName}
+        <CounterContext.Provider value={{ counter: 0 }}>
+          <DemoComponent handleClick={() => {}} />
+        </CounterContext.Provider>
         <ul>
           <div className={styles.title}>子路由测试</div>
           <Link to="/demo/child_one">跳转子路由1</Link>
