@@ -1,26 +1,37 @@
 // import { SFC } from "react";
-import React, { SFC, useState, useEffect } from "react";
+import React, { SFC, useState, useEffect, useRef } from "react";
 import { ComponentProps } from "./index.interface";
 import styles from "./index.module.less";
-let timer: any = null;
-const DemoComponent: SFC<ComponentProps> = ({ handleClick }) => {
-  const [count, setCount] = useState(5);
+const DemoComponent: SFC<ComponentProps> = ({
+  handleClick = () => {},
+  countDown = 0,
+}) => {
+  const [count, setCount] = useState(0);
 
+  let timer: any = useRef();
   useEffect(() => {
-    timer = setInterval(() => {
+    timer.current = setInterval(() => {
       let newCount = count - 1;
       setCount(newCount);
+      if (count <= 0) {
+        clearInterval(timer.current);
+      }
     }, 1000);
     return () => {
-      clearInterval(timer);
+      clearInterval(timer.current);
     };
   });
 
   useEffect(() => {
+    setCount(countDown);
+  }, [countDown]);
+
+  useEffect(() => {
     if (count <= 0) {
-      clearInterval(timer);
+      clearInterval(timer.current);
     }
   });
+
   return (
     <div className={styles.container}>
       <span onClick={handleClick}>{count}</span>

@@ -8,6 +8,7 @@ import ChildOne from "./ChildOne";
 import ChildTwo from "./ChildTwo";
 
 import styles from "./index.module.less";
+import DemoCommonComponent from "@/components/DemoCommonComponent";
 
 const CounterContext = createContext({
   counter: 0,
@@ -65,7 +66,8 @@ class Demo extends React.Component<PageProps, State> {
         <div className={styles.nameButton}>点我登录</div>
         {userInfo.nickName}
         <CounterContext.Provider value={{ counter: 0 }}>
-          <DemoComponent handleClick={() => {}} />
+          <DemoComponent handleClick={() => {}} countDown={100} />
+          <DemoCommonComponent handleClick={() => {}} />
         </CounterContext.Provider>
         <ul>
           <div className={styles.title}>子路由测试</div>
